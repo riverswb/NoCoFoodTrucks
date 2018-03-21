@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using NoCoFoodTrucks.Models;
 
 namespace NoCoFoodTrucks
 {
@@ -21,7 +23,10 @@ namespace NoCoFoodTrucks
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver());
+
+            services.AddDbContext<NoCoFoodTrucksContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("NoCoFoodTrucksContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
